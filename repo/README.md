@@ -11,7 +11,8 @@ Lokal HTML/JSON-import, parsning, filter, manuella AI-anrop med budgetjournal,
 syntetiska analys-/notisdemonstrationer samt ASP.NET-värd och databasmodell finns.
 136 lokala kontroller och 12 syntetiska Chromium-sessionstester passerar.
 Målserverns Docker-start, initiala migration och readiness har verifierats.
-Databasimport/dubbletter, SMTP-leverans och sammanhängande bevakning återstår.
+Fem isolerade PostgreSQL-kontroller för dubbletter och revisioner passerar.
+Appimport, containeromstart, SMTP-leverans och sammanhängande bevakning återstår.
 API-värden importerar bara lokal JSON och filtrerar; AI, SMTP och schema är inte
 inkopplade där. Läs [driftinstruktionerna](docs/local-host-and-notifications.md).
 
@@ -31,7 +32,7 @@ dotnet run --project tests/AssignmentFinder.ParserChecks -c Release --no-build
 
 Kontroller använder syntetiska underlag/mockad HTTP. API-testet startar endast
 ett loopback-API med syntetisk konfiguration. Isolerade PostgreSQL-tester finns
-som separat `--postgres`-körning enligt driftinstruktionerna; de är inte körda här.
+som separat `--postgres`-körning enligt driftinstruktionerna och passerar på målservern.
 
 ## Lokal import
 

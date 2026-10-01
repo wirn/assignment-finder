@@ -28,9 +28,9 @@ Filter, intervall, modell, budget och mottagare konfigureras privat.
   (HTTP 200) är verifierade. Faktisk lagring/omstart och SMTP-leverans återstår.
   Docker/PostgreSQL saknas i den lokala utvecklingsmiljön.
 
-Uppdatering: målserverns imagebygge, initiala databasmigration, app-/databasstart
-och readiness (HTTP 200) har nu verifierats. Lagrings-/dubblettkontroller och
-omstart med bevarade data återstår. Ett isolerat Compose-test finns i profilen checks.
+Fem PostgreSQL-kontroller passerar via Compose-profilen checks: upprepad import,
+metadataändring, återgång till tidigare text, samtidig import och beständighet
+över nya DbContext-instanser. Appimport och containeromstart återstår.
 
 Kryssa av först efter verifiering av respektive färdigkriterium. Delar av ett
 separat referensprojekt har granskats för analysgränssnitt, databas, SMTP och
@@ -77,15 +77,16 @@ Färdigt när app/databas startar med rätt behörigheter via Compose.
 
 - [x] Modellera uppdrag, revision, kandidatprofil, analys, notis och körningshistorik.
 - [x] Generera InitialSchema-migration och verifiera modellöverensstämmelse.
-- [ ] Verifiera unik källa/ID och revisionshistorik i faktisk PostgreSQL.
-- [ ] Verifiera parallell import och omstart med beständiga data.
+- [x] Verifiera unik källa/ID och revisionshistorik i faktisk PostgreSQL.
+- [x] Verifiera parallell import i faktisk PostgreSQL.
+- [ ] Verifiera containeromstart med beständiga data.
 - [ ] Koppla analyslagring till revision, CV-, filter-, prompt- och modellversion.
 - [ ] Verifiera migrations-, backup- och återställningsrutiner.
 - [ ] Fastställ retention innan automatisk radering införs.
 
 Fingerprint inkluderar metadata/kravtolkning men exkluderar hämtningstid.
 Importkod, unika index och transaktionsbundet advisory lock finns.
-`--postgres` ger isolerade syntetiska integrationstester; de har ännu inte körts.
+Alla fem isolerade syntetiska `--postgres`-kontroller passerar på målservern.
 
 ## Steg 5 – Insamling och filterpipeline
 

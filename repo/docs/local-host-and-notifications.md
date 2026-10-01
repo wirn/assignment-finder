@@ -30,7 +30,8 @@ Källor: [Npgsql EF 10](https://www.npgsql.org/efcore/release-notes/10.0.html),
 
 Docker saknas i utvecklingsmiljön 2026-10-01. Imagebygge, initial migration på
 PostgreSQL, app-/databasstart och readiness HTTP 200 har verifierats på målservern.
-Läsning av privata bind mounts, databasimport, dubbletter och återstart återstår.
+Fem isolerade PostgreSQL-kontroller passerar. Läsning av privata bind mounts,
+appimport och containeromstart återstår.
 Appimagen innehåller inte Playwright/Chromium; kontohämtning sker inte i denna image.
 CV, sessionsdata och SMTP-hemligheter behövs inte för den nuvarande importvärden
 och monteras inte. Privat importerad text ligger i databasen och behöver skyddad backup.
@@ -88,8 +89,8 @@ dotnet run --project tests/AssignmentFinder.ParserChecks -c Release --no-build -
 
 Testet använder bara syntetiska data, skapar ett slumpmässigt `af_test_*`-schema,
 migrerar, kontrollerar upprepad/samtidig import och revisionshistorik och tar bort
-just det skapade schemat. Vid processavbrott kan testschemat bli kvar. Testet har
-inte körts här eftersom varken Docker eller PostgreSQL finns tillgängligt.
+just det skapade schemat. Vid processavbrott kan testschemat bli kvar. Alla fem
+kontroller passerar på målservern via Compose. Containeromstart testas separat.
 Vanliga lokala kontroller startar endast ett loopback-API med syntetisk konfiguration.
 
 På en redan konfigurerad Compose-installation kan samma kontroll köras med:
