@@ -10,7 +10,8 @@ Kodroten är denna katalog (`repo/`). Se [planen](../steps.md) och
 Lokal HTML/JSON-import, parsning, filter, manuella AI-anrop med budgetjournal,
 syntetiska analys-/notisdemonstrationer samt ASP.NET-värd och databasmodell finns.
 136 lokala kontroller och 12 syntetiska Chromium-sessionstester passerar.
-Docker/PostgreSQL-start, SMTP-leverans och sammanhängande bevakning återstår.
+Målserverns Docker-start, initiala migration och readiness har verifierats.
+Databasimport/dubbletter, SMTP-leverans och sammanhängande bevakning återstår.
 API-värden importerar bara lokal JSON och filtrerar; AI, SMTP och schema är inte
 inkopplade där. Läs [driftinstruktionerna](docs/local-host-and-notifications.md).
 

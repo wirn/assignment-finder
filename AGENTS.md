@@ -85,7 +85,8 @@ Sökorden styr insamlingen men är inte obligatoriska krav i det lokala filtret.
   Kör `browser-check` för ett lokalt Chromium-test utan kontoanrop. Sessionsdata är privata.
 - ASP.NET-värden i `repo/src/AssignmentFinder.App` kör tills vidare endast lokal
   JSON-import och filtrering till PostgreSQL. AI, SMTP och schema är inte inkopplade.
-  Docker/PostgreSQL-start är ännu inte verifierad. `notification-demo` skapar bara
+  Docker/PostgreSQL-start och readiness är verifierade på målservern; import och
+  omstart med data återstår. `notification-demo` skapar bara
   syntetiska svenska förhandsvisningar; gränsen 70 är en testinställning.
   Databaskontroller med `--postgres` kräver en disponibel testdatabas via
   `ASSIGNMENT_TEST_POSTGRES` och använder ett eget slumpmässigt schema.

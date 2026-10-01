@@ -17,7 +17,8 @@ internal static class PostgresChecks
         using var admin = new NpgsqlConnection(connection);
         await admin.OpenAsync();
         await using (var create = new NpgsqlCommand($"CREATE SCHEMA \"{schema}\"", admin)) await create.ExecuteNonQueryAsync();
-        var options = new DbContextOptionsBuilder<AssignmentDbContext>().UseNpgsql(scopedConnection).Options;
+        var options = new DbContextOptionsBuilder<AssignmentDbContext>().UseNpgsql(scopedConnection,
+            provider => provider.MigrationsHistoryTable("__EFMigrationsHistory", schema)).Options;
         try
         {
             await using (var db = new AssignmentDbContext(options)) await db.Database.MigrateAsync();

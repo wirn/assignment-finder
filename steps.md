@@ -24,8 +24,13 @@ Filter, intervall, modell, budget och mottagare konfigureras privat.
   Rådata och kandidatbedömningar ingår inte i detta repo.
 - API-värden importerar endast sparade JSON-filer till PostgreSQL och filtrerar.
   AI, SMTP och schema är inte inkopplade där.
-- Docker/PostgreSQL-start, faktisk lagring/omstart och SMTP-leverans återstår.
+- Målserverns imagebygge, initiala migration, app-/databasstart och readiness
+  (HTTP 200) är verifierade. Faktisk lagring/omstart och SMTP-leverans återstår.
   Docker/PostgreSQL saknas i den lokala utvecklingsmiljön.
+
+Uppdatering: målserverns imagebygge, initiala databasmigration, app-/databasstart
+och readiness (HTTP 200) har nu verifierats. Lagrings-/dubblettkontroller och
+omstart med bevarade data återstår. Ett isolerat Compose-test finns i profilen checks.
 
 Kryssa av först efter verifiering av respektive färdigkriterium. Delar av ett
 separat referensprojekt har granskats för analysgränssnitt, databas, SMTP och
@@ -62,7 +67,7 @@ Färdigt när tillåten hämtning fungerar och inloggningsfel skiljs från tomma
 - [x] Implementera live/ready och skydda administrativa endpoints med API-nyckel.
 - [x] Bind API till loopback som standard.
 - [ ] Verifiera Dockerfile/Compose, privata bind mounts och PostgreSQL-volym.
-- [ ] Verifiera healthchecks och image på målservern.
+- [x] Verifiera healthchecks och image på målservern.
 - [ ] Montera CV/session/secrets först när respektive funktion kopplas in.
 
 Dockerfiler finns. Appimagen innehåller inte Chromium och gör inga kontoanrop.

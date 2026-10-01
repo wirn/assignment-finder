@@ -29,6 +29,17 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+  postgres-checks:
+    profiles: ["checks"]
+    build:
+      context: .
+      target: postgres-checks
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASSIGNMENT_TEST_POSTGRES: Host=postgres;Database=assignmentfinder;Username=assignmentfinder;Password=${DB_PASSWORD:?Set DB_PASSWORD};Timeout=5;Command Timeout=15
+    restart: "no"
   postgres:
     image: postgres:17
     restart: unless-stopped

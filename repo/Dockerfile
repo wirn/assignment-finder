@@ -4,7 +4,11 @@ COPY global.json AssignmentFinder.slnx ./
 COPY src/ ./src/
 COPY tests/ ./tests/
 RUN dotnet restore AssignmentFinder.slnx --locked-mode
+RUN dotnet build AssignmentFinder.slnx -c Release --no-restore
 RUN dotnet publish src/AssignmentFinder.App -c Release --no-restore -o /out
+
+FROM build AS postgres-checks
+ENTRYPOINT ["dotnet", "/src/tests/AssignmentFinder.ParserChecks/bin/Release/net10.0/AssignmentFinder.ParserChecks.dll", "--postgres"]
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 USER root

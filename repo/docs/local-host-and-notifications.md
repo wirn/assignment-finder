@@ -28,8 +28,9 @@ Källor: [Npgsql EF 10](https://www.npgsql.org/efcore/release-notes/10.0.html),
 
 ## Docker Compose – verifieras i testmiljö
 
-Docker saknas i utvecklingsmiljön 2026-10-01. Imagebygge, Compose, bind mounts,
-databasmigration på faktisk PostgreSQL och återstart är därför inte verifierade.
+Docker saknas i utvecklingsmiljön 2026-10-01. Imagebygge, initial migration på
+PostgreSQL, app-/databasstart och readiness HTTP 200 har verifierats på målservern.
+Läsning av privata bind mounts, databasimport, dubbletter och återstart återstår.
 Appimagen innehåller inte Playwright/Chromium; kontohämtning sker inte i denna image.
 CV, sessionsdata och SMTP-hemligheter behövs inte för den nuvarande importvärden
 och monteras inte. Privat importerad text ligger i databasen och behöver skyddad backup.
@@ -90,6 +91,18 @@ migrerar, kontrollerar upprepad/samtidig import och revisionshistorik och tar bo
 just det skapade schemat. Vid processavbrott kan testschemat bli kvar. Testet har
 inte körts här eftersom varken Docker eller PostgreSQL finns tillgängligt.
 Vanliga lokala kontroller startar endast ett loopback-API med syntetisk konfiguration.
+
+På en redan konfigurerad Compose-installation kan samma kontroll köras med:
+
+```sh
+docker compose --profile checks run --build --rm postgres-checks
+```
+
+Detta bygger en separat testimage med SDK och testprogrammet. Vanlig appimage
+innehåller fortfarande bara runtime/app. Testet använder den konfigurerade
+PostgreSQL-instansen men bara sitt slumpmässiga schema, inklusive separat
+migrationshistorik. Appens schema, data och budgetjournal ändras inte.
+Testcontainern tas bort när körningen avslutas. Ingen AI, SMTP eller kontohämtning.
 
 ## Notifieringsförhandsvisning
 
