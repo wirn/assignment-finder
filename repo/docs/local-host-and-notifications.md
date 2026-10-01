@@ -47,6 +47,8 @@ Skapa `data/private/import-inbox` och kopiera önskade exportfiler dit, med namn
 `brainville-*.json`. Högst 100 filer, högst 2 MB per fil, inga undermappar.
 Filterfilen måste finnas som `data/private/filter-settings.json`.
 
+Sätt APP_USER_ID och APP_GROUP_ID i lokal .env till ägarens UID/GID
+(`id -u` respektive `id -g` på Linux). Containern körs då som den användaren.
 Containerns användare måste kunna läsa dessa skrivskyddade bind mounts. Ordna
 behörigheter för den avsedda containeranvändaren utan att öppna privata filer för
 alla användare. Anpassa detta till serverns UID/GID innan verkliga data monteras.

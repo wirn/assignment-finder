@@ -2,6 +2,7 @@ name: assignment-finder
 services:
   app:
     build: .
+    user: "${APP_USER_ID:-1654}:${APP_GROUP_ID:-1654}"
     restart: unless-stopped
     depends_on:
       postgres:
