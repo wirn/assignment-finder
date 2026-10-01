@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AssignmentFinder.Analysis/AssignmentFinder.Analysis.csproj" />
+    <Project Path="src/AssignmentFinder.Data/AssignmentFinder.Data.csproj" />
+    <Project Path="src/AssignmentFinder.App/AssignmentFinder.App.csproj" />
+    <Project Path="src/AssignmentFinder.Notifications/AssignmentFinder.Notifications.csproj" />
+    <Project Path="src/AssignmentFinder.Brainville/AssignmentFinder.Brainville.csproj" />
+    <Project Path="src/AssignmentFinder.Cli/AssignmentFinder.Cli.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AssignmentFinder.ParserChecks/AssignmentFinder.ParserChecks.csproj" />
+  </Folder>
+</Solution>

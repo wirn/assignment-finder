@@ -1,0 +1,11 @@
+**/passw.txt
+data/
+**/data/
+**/bin/
+**/obj/
+.git/
+.env*
+**/*.pdf
+**/*.docx
+**/*.html
+**/*.user

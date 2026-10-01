@@ -1,0 +1,11 @@
+{
+  "enabled": false,
+  "model": "gpt-6-luna",
+  "pricingModel": "gpt-6-luna",
+  "totalBudgetSek": 10,
+  "inputUsdPerMillion": 0.125,
+  "outputUsdPerMillion": 0.50,
+  "sekPerUsd": 12,
+  "costSafetyFactor": 1.5,
+  "maxOutputTokens": 4096
+}

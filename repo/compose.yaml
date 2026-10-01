@@ -1,0 +1,51 @@
+name: assignment-finder
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__Main: Host=postgres;Database=assignmentfinder;Username=assignmentfinder;Password=${DB_PASSWORD:?Set DB_PASSWORD};Timeout=3;Command Timeout=5
+      ADMIN_API_KEY: ${ADMIN_API_KEY:?Set ADMIN_API_KEY}
+      ImportDirectory: /app/data/private/import-inbox
+      FilterPath: /app/data/private/filter-settings.json
+    ports:
+      - "127.0.0.1:${APP_PORT:-8091}:8080"
+    volumes:
+      - ./data/private/import-inbox:/app/data/private/import-inbox:ro
+      - ./data/private/filter-settings.json:/app/data/private/filter-settings.json:ro
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: assignmentfinder
+      POSTGRES_USER: assignmentfinder
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U assignmentfinder -d assignmentfinder"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+volumes:
+  postgres_data:

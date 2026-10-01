@@ -1,0 +1,27 @@
+# Only project instructions and the code root belong in this repository.
+/*
+!/.gitignore
+!/.gitattributes
+!/AGENTS.md
+!/steps.md
+!/README.md
+!/repo/
+
+# Private inputs, exports, sessions, budgets and local transfer packages.
+**/data/
+**/passw.txt
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+**/*.key
+**/*.pfx
+**/*.p12
+
+# Build outputs and machine-specific files.
+**/bin/
+**/obj/
+**/.vs/
+**/.idea/
+**/*.user
+**/*.suo
