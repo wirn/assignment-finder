@@ -25,12 +25,14 @@ Filter, intervall, modell, budget och mottagare konfigureras privat.
 - API-värden importerar endast sparade JSON-filer till PostgreSQL och filtrerar.
   AI, SMTP och schema är inte inkopplade där.
 - Målserverns imagebygge, initiala migration, app-/databasstart och readiness
-  (HTTP 200) är verifierade. Faktisk lagring/omstart och SMTP-leverans återstår.
+  (HTTP 200), syntetisk appimport och omstart med bevarade data är verifierade.
+  SMTP-leverans återstår.
   Docker/PostgreSQL saknas i den lokala utvecklingsmiljön.
 
 Fem PostgreSQL-kontroller passerar via Compose-profilen checks: upprepad import,
 metadataändring, återgång till tidigare text, samtidig import och beständighet
-över nya DbContext-instanser. Appimport och containeromstart återstår.
+över nya DbContext-instanser. Syntetisk appimport, återimport utan ny revision
+och omstart av både app och databas med bevarat uppdrag/körning passerar.
 
 Kryssa av först efter verifiering av respektive färdigkriterium. Delar av ett
 separat referensprojekt har granskats för analysgränssnitt, databas, SMTP och
@@ -66,7 +68,7 @@ Färdigt när tillåten hämtning fungerar och inloggningsfel skiljs från tomma
 - [x] Inför DI, grundläggande konfigurationsvalidering och loggning utan privat text.
 - [x] Implementera live/ready och skydda administrativa endpoints med API-nyckel.
 - [x] Bind API till loopback som standard.
-- [ ] Verifiera Dockerfile/Compose, privata bind mounts och PostgreSQL-volym.
+- [x] Verifiera Dockerfile/Compose, privata bind mounts och PostgreSQL-volym.
 - [x] Verifiera healthchecks och image på målservern.
 - [ ] Montera CV/session/secrets först när respektive funktion kopplas in.
 
@@ -79,7 +81,7 @@ Färdigt när app/databas startar med rätt behörigheter via Compose.
 - [x] Generera InitialSchema-migration och verifiera modellöverensstämmelse.
 - [x] Verifiera unik källa/ID och revisionshistorik i faktisk PostgreSQL.
 - [x] Verifiera parallell import i faktisk PostgreSQL.
-- [ ] Verifiera containeromstart med beständiga data.
+- [x] Verifiera containeromstart med beständiga data.
 - [ ] Koppla analyslagring till revision, CV-, filter-, prompt- och modellversion.
 - [ ] Verifiera migrations-, backup- och återställningsrutiner.
 - [ ] Fastställ retention innan automatisk radering införs.

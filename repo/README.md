@@ -12,7 +12,8 @@ syntetiska analys-/notisdemonstrationer samt ASP.NET-värd och databasmodell fin
 136 lokala kontroller och 12 syntetiska Chromium-sessionstester passerar.
 Målserverns Docker-start, initiala migration och readiness har verifierats.
 Fem isolerade PostgreSQL-kontroller för dubbletter och revisioner passerar.
-Appimport, containeromstart, SMTP-leverans och sammanhängande bevakning återstår.
+Syntetisk appimport, återimport utan dubblett och app-/databasomstart med
+bevarade data är verifierade. SMTP-leverans och sammanhängande bevakning återstår.
 API-värden importerar bara lokal JSON och filtrerar; AI, SMTP och schema är inte
 inkopplade där. Läs [driftinstruktionerna](docs/local-host-and-notifications.md).
 

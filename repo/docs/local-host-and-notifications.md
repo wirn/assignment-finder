@@ -30,8 +30,9 @@ Källor: [Npgsql EF 10](https://www.npgsql.org/efcore/release-notes/10.0.html),
 
 Docker saknas i utvecklingsmiljön 2026-10-01. Imagebygge, initial migration på
 PostgreSQL, app-/databasstart och readiness HTTP 200 har verifierats på målservern.
-Fem isolerade PostgreSQL-kontroller passerar. Läsning av privata bind mounts,
-appimport och containeromstart återstår.
+Fem isolerade PostgreSQL-kontroller passerar. Privata bind mounts, syntetisk
+appimport, återimport utan ny revision och app-/databasomstart med bevarat
+uppdrag och körningshistorik är verifierade. Lagrade filterbeslut granskas separat.
 Appimagen innehåller inte Playwright/Chromium; kontohämtning sker inte i denna image.
 CV, sessionsdata och SMTP-hemligheter behövs inte för den nuvarande importvärden
 och monteras inte. Privat importerad text ligger i databasen och behöver skyddad backup.

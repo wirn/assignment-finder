@@ -86,8 +86,8 @@ Sökorden styr insamlingen men är inte obligatoriska krav i det lokala filtret.
 - ASP.NET-värden i `repo/src/AssignmentFinder.App` kör tills vidare endast lokal
   JSON-import och filtrering till PostgreSQL. AI, SMTP och schema är inte inkopplade.
   Docker/PostgreSQL-start, readiness och fem isolerade databaskontroller är
-  verifierade på målservern; appimport och
-  omstart med data återstår. `notification-demo` skapar bara
+  verifierade på målservern. Syntetisk appimport, återimport utan ny revision
+  och app-/databasomstart med bevarade data är verifierade. `notification-demo` skapar bara
   syntetiska svenska förhandsvisningar; gränsen 70 är en testinställning.
   Databaskontroller med `--postgres` kräver en disponibel testdatabas via
   `ASSIGNMENT_TEST_POSTGRES` och använder ett eget slumpmässigt schema.
