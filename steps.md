@@ -18,12 +18,13 @@ Filter, intervall, modell, budget och mottagare konfigureras privat.
 ## Aktuell verifiering
 
 - Release-bygge utan varningar och låst paketrestore har verifierats.
-- 136 lokala parser-, filter-, analys-, notis-, modell- och API-kontroller passerar.
+- 155 lokala parser-, filter-, käll-, analys-, notis-, modell- och API-kontroller passerar.
 - 12 syntetiska Chromium-sessionstester passerar utan kontoanrop eller sparad session.
 - Begränsad insamling och manuella AI-anrop har verifierats separat.
   Rådata och kandidatbedömningar ingår inte i detta repo.
-- API-värden importerar endast sparade JSON-filer till PostgreSQL och filtrerar.
-  AI, SMTP och schema är inte inkopplade där.
+- API-värden stöder lokal JSON och en avstängd, konfigurerbar webbläsarkälla.
+  En uttrycklig syntetisk demopipeline finns för analyslagring/förhandsvisning.
+  Betald AI, SMTP och schema är inte inkopplade där.
 - Målserverns imagebygge, initiala migration, app-/databasstart och readiness
   (HTTP 200), syntetisk appimport och omstart med bevarade data är verifierade.
   SMTP-leverans återstår.
@@ -95,7 +96,8 @@ Alla fem isolerade syntetiska `--postgres`-kontroller passerar på målservern.
 - [x] Definiera IAssignmentSource och lokal JSON-källa.
 - [x] Implementera privata filter med motivering och okända fakta som granskningsbehov.
 - [x] Inför begränsad hämtning, timeout, paus och validering av nästa sidlänk.
-- [ ] Gör Brainville-prototypen till en källa i den sammanhängande appen.
+- [x] Gör Brainville-prototypen till en källa i appens import-/filterflöde; syntetiska källtester passerar.
+- [ ] Verifiera första verkliga webbläsarhämtningen på målservern.
 - [x] Verifiera import → lagring → filter i målmiljön med syntetiskt underlag.
 - [ ] Inför källisolering, körningsstatus och begränsade återförsök vid tillfälliga fel.
 - [ ] Hantera avslutade uppdrag utan att begränsad insamling tolkas som avslut.
@@ -104,6 +106,8 @@ Skyddad manuell import finns. Misslyckad import markeras som fel.
 Sparat filterbeslut för syntetisk serverimport är verifierat: Passed,
 ContinueToAnalysis true, korrekta plats-/omfattningsskäl och inga osäkerheter.
 Återstartshantering och historiska filterbeslut behöver utökas.
+Ett databaslås skyddar nu manuell insamling mellan processer. Övergivna körningar
+markeras Interrupted vid nästa körning. Denna nya databasväg behöver servertest.
 
 ## Steg 6 – CV och AI
 
@@ -135,6 +139,9 @@ Verkliga resultat och citatkorrigeringar sparas endast privat.
 SMTP kräver STARTTLS och normal certifikatvalidering. Fel efter påbörjad sändning
 markeras Uncertain. Adaptern är inte inkopplad i CLI/API. Demo-gränsen 70 är bara
 en fixtureinställning. Verklig SMTP-leverans har inte verifierats.
+AnalysisStore och demopipeline lagrar validerade fixture-analyser och deduplicerade
+Preview-notiser. Nya PostgreSQL-/API-kontroller är förberedda men ännu inte körda.
+Preview är en förhandsvisning, inte en aktiverad sändkö.
 
 ## Steg 8 – Schema och sammanhängande flöde
 
@@ -170,6 +177,7 @@ Compose har loggrotation; övrig faktisk driftverifiering återstår.
 ## Referenser
 
 - [Körinstruktioner](repo/README.md)
+- [Webbläsarkälla och demopipeline](repo/docs/browser-and-analysis-pipeline.md)
 - [Lokal värd och notifieringar](repo/docs/local-host-and-notifications.md)
 - [Brainville-förstudie](repo/docs/brainville-integration.md)
 - [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)

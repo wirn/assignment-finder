@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "sessionPath": "/app/data/private/browser-session/brainville-session.json",
+  "searchUrls": [
+    "https://www.brainville.com/Market/RequisitionSearchResult?Filter.Text=frontend"
+  ],
+  "maximumPages": 1,
+  "maximumAssignments": 20,
+  "delaySeconds": 5
+}

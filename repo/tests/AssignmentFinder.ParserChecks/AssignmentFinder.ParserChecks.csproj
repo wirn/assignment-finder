@@ -7,6 +7,7 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../src/AssignmentFinder.Browser/AssignmentFinder.Browser.csproj" />
     <ProjectReference Include="../../src/AssignmentFinder.Notifications/AssignmentFinder.Notifications.csproj" />
     <ProjectReference Include="../../src/AssignmentFinder.Data/AssignmentFinder.Data.csproj" />
     <ProjectReference Include="../../src/AssignmentFinder.Analysis/AssignmentFinder.Analysis.csproj" />

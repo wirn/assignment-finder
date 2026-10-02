@@ -37,6 +37,12 @@ internal static class AppChecks
             check((await client.GetAsync("/api/status")).StatusCode == HttpStatusCode.Unauthorized
                 && (await client.PostAsync("/api/import/run", null)).StatusCode == HttpStatusCode.Unauthorized,
                 "Status och manuell import kräver administratörsnyckel");
+            check((await client.PostAsync("/api/brainville/run", null)).StatusCode == HttpStatusCode.Unauthorized
+                && (await client.PostAsync("/api/pipeline/demo", null)).StatusCode == HttpStatusCode.Unauthorized
+                && (await client.GetAsync("/api/assignments")).StatusCode == HttpStatusCode.Unauthorized
+                && (await client.GetAsync("/api/analyses")).StatusCode == HttpStatusCode.Unauthorized
+                && (await client.GetAsync("/api/previews/" + Guid.NewGuid())).StatusCode == HttpStatusCode.Unauthorized,
+                "Hämtning, demopipeline, uppdrag, analyser och förhandsvisningar kräver nyckel");
             client.DefaultRequestHeaders.Add("X-Admin-Key", "wrong-key");
             check((await client.GetAsync("/api/status")).StatusCode == HttpStatusCode.Unauthorized, "Fel API-nyckel avvisas");
             client.DefaultRequestHeaders.Remove("X-Admin-Key");

@@ -42,6 +42,38 @@ internal static class PostgresChecks
             await using var verify = new AssignmentDbContext(options);
             check(await verify.Assignments.CountAsync() == 2 && await verify.Revisions.CountAsync() == 4,
                 "PostgreSQL: lagring och versionshistorik består efter återöppning");
+            var input = AnalysisDemo.Input with { CvReviewedByUser = true };
+            var envelope = new AnalysisEnvelope(assignment.Source, assignment.ExternalId, assignment.ContentHash,
+                input.CvHash, "Mock", "fixture-schema", DateTimeOffset.UtcNow, AnalysisDemo.Good);
+            async Task<StoredAnalysis> SaveAnalysis()
+            {
+                await using var db = new AssignmentDbContext(options);
+                return await new AnalysisStore(db).SaveValidatedAsync(restored.RevisionId, input, envelope, "fixture-v1", "Mock");
+            }
+            var analyses = await Task.WhenAll(Enumerable.Range(0, 3).Select(_ => SaveAnalysis()));
+            check(analyses.Select(a => a.Id).Distinct().Count() == 1 && await verify.Profiles.CountAsync() == 1
+                && await verify.Analyses.CountAsync() == 1, "PostgreSQL: samtidig analyslagring ger en profil och en versionsbunden analys");
+            async Task<StoredNotification?> Preview()
+            {
+                await using var db = new AssignmentDbContext(options);
+                return await new AnalysisStore(db).PreparePreviewAsync(analyses[0].Id, "synthetic@example.invalid",
+                    new(70, true), new DateOnly(2026, 10, 2));
+            }
+            var previews = await Task.WhenAll(Enumerable.Range(0, 3).Select(_ => Preview()));
+            check(previews.All(p => p?.State == NotificationState.Preview)
+                && previews.Select(p => p!.Id).Distinct().Count() == 1 && await verify.Notifications.CountAsync() == 1,
+                "PostgreSQL: samtidiga förhandsvisningar dedupliceras med stabilt Message-ID utan utskick");
+            await Import(assignment with { Extent = "60%" });
+            check(await Preview() is null, "PostgreSQL: ersatt revision skapar ingen notisförhandsvisning");
+            await using var mismatch = new AssignmentDbContext(options);
+            try
+            {
+                await new AnalysisStore(mismatch).SaveValidatedAsync(changed.RevisionId, input, envelope, "fixture-v1", "Mock");
+                throw new InvalidOperationException("Wrong revision accepted");
+            }
+            catch (InvalidDataException)
+            { check(await verify.Analyses.CountAsync() == 1, "PostgreSQL: fel revisionsunderlag lagras inte som analys"); }
+            await ServerPipelineChecks.RunAsync(scopedConnection, check);
         }
         finally
         {

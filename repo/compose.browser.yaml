@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+      target: browser-app
+    environment:
+      BrowserSettingsPath: /app/data/private/browser-settings.json
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+    volumes:
+      - ./data/private/browser-settings.json:/app/data/private/browser-settings.json:ro
+      - ./data/private/browser-session:/app/data/private/browser-session:ro
+    shm_size: 256mb

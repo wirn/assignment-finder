@@ -9,13 +9,15 @@ Kodroten är denna katalog (`repo/`). Se [planen](../steps.md) och
 
 Lokal HTML/JSON-import, parsning, filter, manuella AI-anrop med budgetjournal,
 syntetiska analys-/notisdemonstrationer samt ASP.NET-värd och databasmodell finns.
-136 lokala kontroller och 12 syntetiska Chromium-sessionstester passerar.
+155 lokala kontroller och 12 syntetiska Chromium-sessionstester passerar.
 Målserverns Docker-start, initiala migration och readiness har verifierats.
 Fem isolerade PostgreSQL-kontroller för dubbletter och revisioner passerar.
 Syntetisk appimport, återimport utan dubblett och app-/databasomstart med
 bevarade data är verifierade. SMTP-leverans och sammanhängande bevakning återstår.
-API-värden importerar bara lokal JSON och filtrerar; AI, SMTP och schema är inte
-inkopplade där. Läs [driftinstruktionerna](docs/local-host-and-notifications.md).
+API-värden har lokal JSON-import och en avstängd webbläsarkälla. En syntetisk
+demopipeline för analyslagring och e-postförhandsvisning finns. Betald AI,
+SMTP och schema är inte inkopplade där. Läs [driftinstruktionerna](docs/local-host-and-notifications.md)
+och [webbläsar-/pipelineinstruktionerna](docs/browser-and-analysis-pipeline.md).
 
 Privata data och personlig driftkonfiguration ingår inte i det publika repot.
 CV, exporter, sessioner, budgetjournal och verkliga analysresultat ligger under

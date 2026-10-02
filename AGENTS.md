@@ -83,8 +83,10 @@ Sökorden styr insamlingen men är inte obligatoriska krav i det lokala filtret.
 - Efter flytten ligger kodroten i `repo/`; kör bygg- och testkommandon därifrån.
   Playwright-prototypens `login`/`fetch` kräver klarlagd tillåtelse för Brainville-hämtning.
   Kör `browser-check` för ett lokalt Chromium-test utan kontoanrop. Sessionsdata är privata.
-- ASP.NET-värden i `repo/src/AssignmentFinder.App` kör tills vidare endast lokal
-  JSON-import och filtrering till PostgreSQL. AI, SMTP och schema är inte inkopplade.
+- ASP.NET-värden i `repo/src/AssignmentFinder.App` har lokal JSON-import och en
+  konfigurerbar, avstängd webbläsarkälla till PostgreSQL/filter. Syntetisk demopipeline
+  stöder validerad analyslagring och deduplicerad Preview. Betald AI, SMTP och
+  schema är inte inkopplade. Mock är en fixture, aldrig en verklig CV-bedömning.
   Docker/PostgreSQL-start, readiness och fem isolerade databaskontroller är
   verifierade på målservern. Syntetisk appimport, återimport utan ny revision
   och app-/databasomstart med bevarade data är verifierade. `notification-demo` skapar bara
@@ -94,6 +96,7 @@ Sökorden styr insamlingen men är inte obligatoriska krav i det lokala filtret.
   Prompt cv-match-4 och parserrättelser har verifierats lokalt, inte med nya
   betalda kvalitetsanalyser. Originalanalyser och CV-utkast bevaras oförändrade.
   Läs `repo/docs/local-host-and-notifications.md` före drift-/SMTP-inkoppling.
+  Läs även `repo/docs/browser-and-analysis-pipeline.md` före webbläsar-/pipelinekörning.
 
 ## Frågor att klargöra inför implementation
 

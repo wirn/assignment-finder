@@ -139,6 +139,7 @@ const string listHtml = """
 </div></main>
 """;
 var listLinks = listParser.Parse(listHtml, searchUrl);
+await BrowserSourceChecks.RunAsync(listHtml, html, Check);
 Check(listLinks.Select(u => u.AbsolutePath.Split('/')[^1]).SequenceEqual(new[] { "42", "43" })
     && listLinks.All(u => u.Query == ""), "Lista avgränsas, normaliseras och dedupliceras i källordning");
 void RejectList(string input, string name)
@@ -195,6 +196,26 @@ foreach (var demo in AnalysisDemo.Cases())
     var serialized = JsonSerializer.Serialize(demo.Result, AnalysisValidator.JsonOptions);
     Check(AnalysisValidator.Parse(serialized, demo.Input).Score == demo.Result.Score, $"Analysdemo {demo.Name} valideras");
 }
+var reviewedInput = AnalysisDemo.Input with { CvReviewedByUser = true };
+var storeEnvelope = new AnalysisEnvelope(reviewedInput.Assignment.Source, reviewedInput.Assignment.ExternalId,
+    reviewedInput.Assignment.ContentHash, reviewedInput.CvHash, "Mock", "test-schema", DateTimeOffset.UtcNow, AnalysisDemo.Good);
+AssignmentFinder.Data.AnalysisStore.ValidateInput(reviewedInput, storeEnvelope, "fixture-v1", "Mock");
+Check(true, "Analyslagring accepterar validerat syntetiskt versionsbundet underlag");
+foreach (var invalid in new[] { storeEnvelope with { CvHash = "other" }, storeEnvelope with { AssignmentHash = "other" },
+    storeEnvelope with { ExternalId = "other" }, storeEnvelope with { Result = AnalysisDemo.Good with { Score = 101 } } })
+{
+    try { AssignmentFinder.Data.AnalysisStore.ValidateInput(reviewedInput, invalid, "fixture-v1", "Mock"); throw new Exception("Invalid store input accepted"); }
+    catch (InvalidDataException) { Check(true, "Analyslagring avvisar fel version eller ogiltigt svar"); }
+}
+try { AssignmentFinder.Data.AnalysisStore.ValidateInput(AnalysisDemo.Input, storeEnvelope, "fixture-v1", "Mock"); throw new Exception("Unreviewed CV accepted"); }
+catch (InvalidDataException) { Check(true, "Analyslagring kräver granskat CV-underlag"); }
+try
+{
+    var real = reviewedInput with { Assignment = reviewedInput.Assignment with { Source = "Brainville" } };
+    AssignmentFinder.Data.AnalysisStore.ValidateInput(real, storeEnvelope with { Source = "Brainville" }, "fixture-v1", "Mock");
+    throw new Exception("Mock accepted for real assignment");
+}
+catch (InvalidDataException) { Check(true, "Mock-analys får inte lagras som verklig CV-bedömning"); }
 void RejectAnalysis(AnalysisResult candidate, string name)
 {
     try { AnalysisValidator.Validate(candidate, AnalysisDemo.Input); }

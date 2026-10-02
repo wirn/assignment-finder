@@ -3,7 +3,11 @@
 ## Status och avgränsning
 
 ASP.NET-värden importerar sparade JSON-annonser och lagrar filterbeslut i PostgreSQL.
-Den gör inga Brainville-anrop, AI-anrop eller e-postutskick och har inget schema.
+En valbar webbläsarkälla och syntetisk analys-/förhandsvisningspipeline har tillkommit;
+se [nya körinstruktioner](browser-and-analysis-pipeline.md). Betald AI och SMTP är
+fortfarande inte inkopplade i appen. De nya databas-/API-vägarna behöver servertest.
+Standardkonfigurationen gör inga Brainville-anrop. Aktiverad webbläsarkälla kan
+hämta manuellt; appen gör inga betalda AI-anrop eller e-postutskick och har inget schema.
 CLI-prototypen för manuell hämtning/analys finns kvar som separata kommandon.
 Det är ännu inte ett sammanhängande produktionsflöde.
 
@@ -16,9 +20,11 @@ tidigare innehåll efter en ändring ger en ny revision. Senaste filterbeslutet
 uppdateras vid upprepad import; historiska filterkörningar behöver utökas senare.
 
 Importen använder ett transaktionsbundet PostgreSQL advisory lock per källa/ID.
-Ett in-process-lås hindrar överlappande manuella importer i samma appinstans.
+Ett in-process-lås och ett sessionsbundet PostgreSQL-lås hindrar överlappande
+manuella importer mellan appinstanser.
 Körningsstatus sparas; en misslyckad import ger Failed, inte tomt lyckat resultat.
-En avbruten process kan lämna Running; återstartshantering återstår. Återimport av
+En avbruten process kan lämna Running; nästa låshållare markerar den Interrupted.
+Den nya återstartsvägen behöver servertest. Återimport av
 samma inbox är avsedd att vara idempotent. Kör en appinstans under prototypfasen.
 
 Referensprojektets EF-index, Compose, SMTP-adapter och HTML-mall har granskats.

@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/AssignmentFinder.Browser/AssignmentFinder.Browser.csproj" />
     <Project Path="src/AssignmentFinder.Analysis/AssignmentFinder.Analysis.csproj" />
     <Project Path="src/AssignmentFinder.Data/AssignmentFinder.Data.csproj" />
     <Project Path="src/AssignmentFinder.App/AssignmentFinder.App.csproj" />

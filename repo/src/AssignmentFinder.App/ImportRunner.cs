@@ -3,10 +3,12 @@ using System.Text.Json;
 using AssignmentFinder.Analysis;
 using AssignmentFinder.Brainville;
 using AssignmentFinder.Data;
+using AssignmentFinder.Browser;
+using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentFinder.App;
 
-public sealed record ImportSettings(string Directory, string FilterPath);
+public sealed record ImportSettings(string Directory, string FilterPath, string BrowserSettingsPath = "data/private/browser-settings.json");
 public sealed class LocalJsonAssignmentSource(string directory) : IAssignmentSource
 {
     public string Name => "LocalJson";
@@ -28,14 +30,26 @@ public sealed class LocalJsonAssignmentSource(string directory) : IAssignmentSou
 public sealed class ImportRunner(IServiceScopeFactory scopes, ImportSettings settings, ILogger<ImportRunner> logger)
 {
     private readonly SemaphoreSlim gate = new(1, 1);
-    public async Task<PipelineRun?> RunAsync(CancellationToken ct)
+    public async Task<PipelineRun?> RunAsync(CancellationToken ct, bool browser = false)
     {
         if (!await gate.WaitAsync(0, ct)) return null;
         using var scope = scopes.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AssignmentDbContext>();
         var run = new PipelineRun { StartedAtUtc = DateTimeOffset.UtcNow };
+        var databaseLock = false;
         try
         {
+            // Session lock covers the whole collection across processes and API routes.
+            await db.Database.OpenConnectionAsync(ct);
+            await using (var command = db.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = "SELECT pg_try_advisory_lock(hashtextextended('assignment-finder:collection', 0))";
+                databaseLock = (bool)(await command.ExecuteScalarAsync(ct))!;
+            }
+            if (!databaseLock) return null;
+            // Only the holder can recover abandoned runs; no other collector is active.
+            await db.Runs.Where(r => r.State == "Running").ExecuteUpdateAsync(update => update
+                .SetProperty(r => r.State, "Interrupted").SetProperty(r => r.FinishedAtUtc, DateTimeOffset.UtcNow), ct);
             var filter = JsonSerializer.Deserialize<FilterSettings>(await File.ReadAllTextAsync(settings.FilterPath, ct), AnalysisValidator.JsonOptions)
                 ?? throw new InvalidDataException("Filterkonfiguration saknas.");
             filter.Validate();
@@ -43,23 +57,46 @@ public sealed class ImportRunner(IServiceScopeFactory scopes, ImportSettings set
             await db.SaveChangesAsync(ct);
             try
             {
-                await foreach (var item in new LocalJsonAssignmentSource(settings.Directory).FetchAsync(ct))
+                using var collectionTimeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                collectionTimeout.CancelAfter(TimeSpan.FromMinutes(10));
+                IAssignmentSource source = browser ? new BrainvilleBrowserSource(settings.BrowserSettingsPath)
+                    : new LocalJsonAssignmentSource(settings.Directory);
+                await foreach (var item in source.FetchAsync(collectionTimeout.Token))
                 {
                     // A new scope per import avoids keeping failed tracked changes in the next transaction.
                     using var itemScope = scopes.CreateScope();
-                    await itemScope.ServiceProvider.GetRequiredService<AssignmentStore>().ImportAsync(item, filter, ct);
+                    await itemScope.ServiceProvider.GetRequiredService<AssignmentStore>().ImportAsync(item, filter, collectionTimeout.Token);
                     run.Imported++;
                 }
                 run.State = "Completed";
             }
             catch (OperationCanceledException) when (ct.IsCancellationRequested) { run.State = "Cancelled"; }
+            catch (OperationCanceledException) { run.State = "TimedOut"; run.Failed++; }
+            catch (BrowserSourceException error) { run.State = error.State; run.Failed++; }
             catch { run.State = "Failed"; run.Failed++; }
             run.FinishedAtUtc = DateTimeOffset.UtcNow;
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             await db.SaveChangesAsync(timeout.Token);
-            logger.LogInformation("Lokal import {State}: {Imported} uppdrag, {Failed} fel. Inga AI-anrop eller utskick.", run.State, run.Imported, run.Failed);
+            logger.LogInformation("Import {State}: {Imported} uppdrag, {Failed} fel. Inga AI-anrop eller utskick.", run.State, run.Imported, run.Failed);
             return run;
         }
-        finally { gate.Release(); }
+        finally
+        {
+            try
+            {
+                if (databaseLock)
+                {
+                    await using var command = db.Database.GetDbConnection().CreateCommand();
+                    command.CommandText = "SELECT pg_advisory_unlock(hashtextextended('assignment-finder:collection', 0))";
+                    using var releaseTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+                    await command.ExecuteScalarAsync(releaseTimeout.Token);
+                }
+            }
+            finally
+            {
+                try { await db.Database.CloseConnectionAsync(); }
+                finally { gate.Release(); }
+            }
+        }
     }
 }

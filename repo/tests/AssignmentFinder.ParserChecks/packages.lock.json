@@ -20,6 +20,11 @@
           "MimeKit": "4.18.0"
         }
       },
+      "Microsoft.Bcl.AsyncInterfaces": {
+        "type": "Transitive",
+        "resolved": "6.0.0",
+        "contentHash": "UcSjPsst+DfAdJGVDsu346FX0ci0ah+lw3WRtn18NUwEqRt70HaOQ7lI72vy3+1LxtqI3T5GWwV39rQSrCzAeg=="
+      },
       "Microsoft.EntityFrameworkCore": {
         "type": "Transitive",
         "resolved": "10.0.11",
@@ -125,6 +130,15 @@
         "resolved": "10.0.11",
         "contentHash": "SXcz+kF+4Oo9b1+55zntpJFYfwb1jw66ioxptyNOOTDc8g2FHnBFWjZpsWfCvZIhzr0x+4e2trVTs4OKwQfBtw=="
       },
+      "Microsoft.Playwright": {
+        "type": "Transitive",
+        "resolved": "1.58.0",
+        "contentHash": "LYLB00NUTzdY3NEN+fOQcxNuVALoGJMMWZYQINGBs4MfsKcTvr6WKoAmSsT5D4pPOOnN8uAyushEzoQ8qUEb0w==",
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "6.0.0",
+          "System.ComponentModel.Annotations": "5.0.0"
+        }
+      },
       "MimeKit": {
         "type": "Transitive",
         "resolved": "4.18.0",
@@ -152,6 +166,11 @@
           "Npgsql": "10.0.0"
         }
       },
+      "System.ComponentModel.Annotations": {
+        "type": "Transitive",
+        "resolved": "5.0.0",
+        "contentHash": "dMkqfy2el8A8/I76n2Hi1oBFEbG1SfxD2l5nhwXV3XjlnOmwxJlQbYpJH4W51odnU9sARCSAgv7S3CyAFMkpYg=="
+      },
       "System.Security.Cryptography.Pkcs": {
         "type": "Transitive",
         "resolved": "10.0.0",
@@ -167,6 +186,13 @@
         "type": "Project",
         "dependencies": {
           "HtmlAgilityPack": "[1.13.0, )"
+        }
+      },
+      "assignmentfinder.browser": {
+        "type": "Project",
+        "dependencies": {
+          "AssignmentFinder.Brainville": "[1.0.0, )",
+          "Microsoft.Playwright": "[1.58.0, )"
         }
       },
       "assignmentfinder.data": {
