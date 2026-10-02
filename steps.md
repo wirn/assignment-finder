@@ -83,7 +83,7 @@ Färdigt när app/databas startar med rätt behörigheter via Compose.
 - [x] Verifiera unik källa/ID och revisionshistorik i faktisk PostgreSQL.
 - [x] Verifiera parallell import i faktisk PostgreSQL.
 - [x] Verifiera containeromstart med beständiga data.
-- [ ] Koppla analyslagring till revision, CV-, filter-, prompt- och modellversion.
+- [x] Koppla analyslagring till revision, CV-, filter-, prompt- och modellversion; syntetiska PostgreSQL-tester passerar.
 - [ ] Verifiera migrations-, backup- och återställningsrutiner.
 - [ ] Fastställ retention innan automatisk radering införs.
 
@@ -140,7 +140,7 @@ SMTP kräver STARTTLS och normal certifikatvalidering. Fel efter påbörjad sän
 markeras Uncertain. Adaptern är inte inkopplad i CLI/API. Demo-gränsen 70 är bara
 en fixtureinställning. Verklig SMTP-leverans har inte verifierats.
 AnalysisStore och demopipeline lagrar validerade fixture-analyser och deduplicerade
-Preview-notiser. Nya PostgreSQL-/API-kontroller är förberedda men ännu inte körda.
+Preview-notiser. Alla 15 PostgreSQL-/API-kontroller passerar på målservern.
 Preview är en förhandsvisning, inte en aktiverad sändkö.
 
 ## Steg 8 – Schema och sammanhängande flöde

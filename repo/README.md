@@ -11,7 +11,7 @@ Lokal HTML/JSON-import, parsning, filter, manuella AI-anrop med budgetjournal,
 syntetiska analys-/notisdemonstrationer samt ASP.NET-värd och databasmodell finns.
 155 lokala kontroller och 12 syntetiska Chromium-sessionstester passerar.
 Målserverns Docker-start, initiala migration och readiness har verifierats.
-Fem isolerade PostgreSQL-kontroller för dubbletter och revisioner passerar.
+Alla 15 PostgreSQL-/API-kontroller passerar, inklusive analyslagring och förhandsvisningar.
 Syntetisk appimport, återimport utan dubblett och app-/databasomstart med
 bevarade data är verifierade. SMTP-leverans och sammanhängande bevakning återstår.
 API-värden har lokal JSON-import och en avstängd webbläsarkälla. En syntetisk

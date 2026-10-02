@@ -16,8 +16,8 @@ docker compose --profile checks run --build --rm postgres-checks
 Kontrollerna använder ett tillfälligt testschema. De testar nu även samtidig
 analyslagring, deduplicerade förhandsvisningar, ersatta revisioner och appens
 syntetiska demoflöde via ett tillfälligt loopback-API. Inga konto-, AI- eller SMTP-anrop.
-De tidigare fem lagringskontrollerna är serververifierade; tilläggen behöver
-verifieras på målservern innan checklistans nya lagringsdelar kryssas av.
+Alla 15 PostgreSQL-/API-kontroller passerar på målservern, inklusive samtidig
+analyslagring, förhandsvisningar och demoflödet. Docker med Chromium återstår.
 
 ## Docker med Chromium
 
