@@ -96,11 +96,13 @@ Alla fem isolerade syntetiska `--postgres`-kontroller passerar på målservern.
 - [x] Implementera privata filter med motivering och okända fakta som granskningsbehov.
 - [x] Inför begränsad hämtning, timeout, paus och validering av nästa sidlänk.
 - [ ] Gör Brainville-prototypen till en källa i den sammanhängande appen.
-- [ ] Verifiera import → lagring → filter i målmiljön.
+- [x] Verifiera import → lagring → filter i målmiljön med syntetiskt underlag.
 - [ ] Inför källisolering, körningsstatus och begränsade återförsök vid tillfälliga fel.
 - [ ] Hantera avslutade uppdrag utan att begränsad insamling tolkas som avslut.
 
 Skyddad manuell import finns. Misslyckad import markeras som fel.
+Sparat filterbeslut för syntetisk serverimport är verifierat: Passed,
+ContinueToAnalysis true, korrekta plats-/omfattningsskäl och inga osäkerheter.
 Återstartshantering och historiska filterbeslut behöver utökas.
 
 ## Steg 6 – CV och AI
